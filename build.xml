@@ -31,8 +31,16 @@
   </target>
 
   <target name="test" depends="build" description="unit test" >
+    <dirname property="junit.raw" file="${junit.dir}/raw/"/>
+    <mkdir dir="${junit.raw}" />
     <junit errorProperty="test.failed" failureProperty="test.failed">
-      <test name="${test.class}" todir="${junit.dir}" />
+<!--      <test name="${test.class}" todir="${junit.dir}" />-->
+      <batchtest fork="yes" todir="${junit.raw}"> 
+        <formatter type="xml"/> 
+        <fileset dir="${src.dir}"> 
+          <include name="**/*Test*.java"/> 
+        </fileset> 
+      </batchtest> 
       <formatter type="brief" usefile="false" />
       <formatter type="xml" />
       <classpath refid="classpath" />
