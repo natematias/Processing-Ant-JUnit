@@ -1,4 +1,6 @@
-package hello;
+package hello.tests;
+
+import hello.*;
 
 import junit.framework.TestCase;
 
