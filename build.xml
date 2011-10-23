@@ -5,18 +5,16 @@
   <property name="build.dir" value="build"/>
   <property name="dist.dir"  value="dist"/>
   <property name="junit.dir" value="junit-results"/>
-  <property name="lib.dir"     value="lib"/>
-
+  <property name="lib.dir"   value="lib"/>
+  <property name="jar.name"  value="hello.jar"/>
 
   <property name="junit.jar" location="lib/junit.jar"/>
   <property name="core.jar" location="lib/core.jar"/>
   <property name="test.class" value="hello.HelloTest"/>
+  <property name="main-class" value="hello.Hello"/>
 
   <path id="classpath">
-    <fileset dir="${lib.dir}" includes="**/*.jar"/>
     <pathelement location="${build.dir}" />
-    <!--<pathelement location="${junit.jar}" />
-    <pathelement location="${core.jar}" /> -->
     <fileset dir="lib">
         <include name="**/*.jar"/>
     </fileset>
@@ -40,7 +38,6 @@
     <dirname property="junit.raw" file="${junit.dir}/raw/"/>
     <mkdir dir="${junit.raw}" />
     <junit errorProperty="test.failed" failureProperty="test.failed">
-<!--      <test name="${test.class}" todir="${junit.dir}" />-->
       <batchtest fork="yes" todir="${junit.raw}"> 
         <formatter type="xml"/> 
         <fileset dir="${src.dir}"> 
@@ -55,16 +52,19 @@
   </target>
 
   <target name="dist" depends="build" description="generate the distribution" >
-    <jar jarfile="${dist.dir}/hello.jar" basedir="${build.dir}">
+    <jar jarfile="${dist.dir}/${jar.name}" basedir="${build.dir}">
       <manifest>
-        <attribute name="Main-Class" value="hello.Hello"/>
+        <attribute name="Main-Class" value="{$main-class}"/>
       </manifest>
     </jar>
   </target>
 
   <target name="run" depends="dist">
-    <java jar="${dist.dir}/hello.jar" fork="true">
-        <classpath refid="classpath" />
+    <java fork="true" classname="${main-class}">
+      <classpath>
+        <path refid="classpath"/>
+        <path id="application" location="${dist.dir}/${jar.name}"/>
+      </classpath>
     </java>
   </target>
 
