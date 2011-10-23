@@ -9,12 +9,17 @@
 
 
   <property name="junit.jar" location="lib/junit.jar"/>
+  <property name="core.jar" location="lib/core.jar"/>
   <property name="test.class" value="hello.HelloTest"/>
 
   <path id="classpath">
     <fileset dir="${lib.dir}" includes="**/*.jar"/>
     <pathelement location="${build.dir}" />
-    <pathelement location="${junit.jar}" />
+    <!--<pathelement location="${junit.jar}" />
+    <pathelement location="${core.jar}" /> -->
+    <fileset dir="lib">
+        <include name="**/*.jar"/>
+    </fileset>
   </path>
 
 
@@ -25,7 +30,8 @@
   </target>
 
   <target name="build" depends="init" description="build everything under ${src.dir}" >
-    <javac srcdir="${src.dir}" destdir="${build.dir}">
+    <!-- includeantruntime included to get around ant 1.8 misfeature -->
+    <javac srcdir="${src.dir}" destdir="${build.dir}" includeantruntime="false">
       <classpath refid="classpath"/>
     </javac>
   </target>
@@ -57,7 +63,9 @@
   </target>
 
   <target name="run" depends="dist">
-    <java jar="${dist.dir}/hello.jar" fork="true" />
+    <java jar="${dist.dir}/hello.jar" fork="true">
+        <classpath refid="classpath" />
+    </java>
   </target>
 
   <target name="clean" description="clean up" >
